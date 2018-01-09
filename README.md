@@ -72,6 +72,7 @@
             | Country         | -         |  국가 코드           |
         
         2. Result Parameters
+            
             (성공)
             ```json
             {
@@ -126,6 +127,7 @@
             {"Result":"false", "ResultCode": "89", "ResultMsg" : "광고없음", "Campaigns": []}
             ```        
 
+
 2. 노출 신호 (OPTIONAL)
 
     ```
@@ -160,6 +162,7 @@
             | ResultMsg       | O         | 결과 메시지                                 |
         
         2. Result Parameters
+            
             (성공)
             ```json
             {"ResultCode": "10", "ResultMsg" : "정상처리"}
@@ -169,12 +172,13 @@
             ```json
             {"Result":"false", "ResultCode": "89", "ResultMsg" : "광고없음", "Campaigns": []}
             ```        
-    
-    
+           
                         
 ### II. nReward(비보상형) 연동
 
+
 ### III. CPC (클릭형) 연동
+
 
 ### IV. 연동 공통
 1. 광고 참여 완료 POSTBACK (OPTION)
