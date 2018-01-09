@@ -48,19 +48,130 @@
             | Result          | O         | 결과 여부 <br/> - true : 정상, false : 오류 |
             | ResultCode      | O         | 결과 코드                                   |
             | ResultMsg       | O         | 결과 메시지                                 |
-            | Campaigns                                                               |||
-            | AdId            |           |             |
-            | AdTitle         |           |             |
-            | AdType          |           |             |
-            | AppPackage      |           |             |
-            | AppName         |           |             |
-            | AppDownloadURL  |           |             |
-            | AppShowURL      |           |             |
-            | AppIcon         |           |             |
-            | Viewtitle       |           |             |
+            | Campaigns       | -                                                      ||
+            | AdId            | -         | 광고코드            |
+            | AdTitle         | -         | 광고명칭            |
+            | AdType          | -         | 광고 타입<br/> - install : 설치형<br/> - click : 클릭형<br/> - imapressions : 노출형<br/> - run : 실행형<br/> - action : 액션형 |
+            | AppPackage      | -         | 패키지명            |
+            | AppName         | -         | 앱 이름            |
+            | AppDownloadURL  | -         | 광고 참여시 호출 URL            |
+            | AppShowURL      | -         | 광고 노출시 호출 URL            |
+            | AppIcon         | -         | 앱아이콘 URL            |
+            | ViewTitle       | -         | 광고 타이틀            |
+            | ViewDesc        | -         | 광고 설명            |
+            | AdADType        | -         | 매체 구분 코드            |
+            | DeviceVer       | -         | 단말 버전            |
+            | addImage        | -         | 추가 이미지 URL            |
+            | addWidth        | -         | 광고 소재 가로 사이즈            |
+            | addHeight       | -         | 광고 소재 세로 사이즈            |
+            | DayCut          | -         | 일 노출 제한 값            |
+            | DayClickCut     | -         | 일 클릭 제한 값            |
+            | DayGoalCut      | -         | 일 실행 제한 값            |
+            | Price           | -         | 매체 단가            |
+            | UserPoint       | -         | 매체 사용자 단가            |
+            | Country         | -         |  국가 코드           |
         
+        2. Result Parameters
+            (성공)
+            ```json
+            {
+                "Result": "true",
+                "ResultCode": 1,
+                "ResultMsg": "참여가능",
+                "Campaigns": [
+                    {
+                        "AdId": "SAD1712014",
+                        "AdTitle": "뮤직메이트",
+                        "AdType": "run",
+                        "AppPackage": "skplanet.musicmate",
+                        "AppName": "뮤직메이트",
+                        "AppDownloadUrl": "http://ad.focusm.kr/service/freeLanding.php?ad_type=1&mid=AD1404003366&aid=SAD1712014&uid=",
+                        "AppShowUrl": "http://ad.focusm.kr/service/freeShow.php?ad_type=1&mid=AD1404003366&aid=SAD1712014&uid=",
+                        "AppIcon": "http://img.focusm.co.kr/data/ad/SP1407002_05160733a200.png",
+                        "ViewTitle": "뮤직메이트 ",
+                        "ViewDesc": "국내 정상급 음원 보유량의 모바일 스트리밍 서비스",
+                        "AdADType": "1",
+                        "DeviceVer": "9",
+                        "addImage": "",
+                        "DayCut": 0,
+                        "DayClickCut": 0,
+                        "UserPoint": 0,
+                        "Country": "KR"
+                    },
+                    {
+                        "AdId": "SAD1606058",
+                        "AdTitle": "앱리프트_킹덤스토리 (사이트 NCPI 노출)",
+                        "AdType": "run",
+                        "AppPackage": "com.nhnent.SK10392",
+                        "AppName": "킹덤스토리",
+                        "AppDownloadUrl": "http://ad.focusm.kr/service/freeLanding.php?ad_type=1&mid=AD1404003366&aid=SAD1606058&uid=",
+                        "AppShowUrl": "http://ad.focusm.kr/service/freeShow.php?ad_type=1&mid=AD1404003366&aid=SAD1606058&uid=",
+                        "AppIcon": "http://img.focusm.co.kr/data/ad/SP1405010_08114840a77.png",
+                        "ViewTitle": "킹덤스토리",
+                        "ViewDesc": "매일 펼쳐지는 천하제일장수대회! PVP 최강자들이 누리는 원보 파티!",
+                        "AdADType": "1",
+                        "DeviceVer": "9",
+                        "addImage": "",
+                        "DayCut": 0,
+                        "DayClickCut": 0,
+                        "UserPoint": 0,
+                        "Country": "KR"
+                    }
+                ]
+            }
+            ```
+            
+            (실패)
+            ```json
+            {"Result":"false", "ResultCode": "89", "ResultMsg" : "광고없음", "Campaigns": []}
+            ```        
+
+2. 노출 신호 (OPTIONAL)
+
+    ```
+    광고 요청 API 사용하지 않고 단일 광고에 대해 FMI으로부터 직접 전달받아 사용하는 경우 사용됩니다.
+    FMI에서 노출 빈도를 집계하기 위한 API 입니다.
+    매체 사정에 의해 생략 가능합니다.
+    ```
+
+    1. Request
         
-                    
+        1. 연동방식
+            
+            URL : http://ad.focusm.kr/service/freeShow.php              
+            Method : GET
+            
+        2. Parameters
+            
+            | Parameter Name | Essential | Desc.                                                               |
+            | :------------: | :-------: | :------------------------------------------------------------------ |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
+            | aid            | O         | **광고 코드** <br/> - 포커스엠에서 생성한 연동 광고 코드           |
+            | uid            | -         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등     |
+            | puid2          | -         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능) |
+            | adid           | -         | 구글 광고 ID                                                        |
+        
+    2. Response
+        1. Result Parameters
+        
+            | Parameter Name  | Essential | Desc.  |
+            | :-------------: | :-------: | :----------------------- |
+            | ResultCode      | O         | 결과 코드                                   |
+            | ResultMsg       | O         | 결과 메시지                                 |
+        
+        2. Result Parameters
+            (성공)
+            ```json
+            {"ResultCode": "10", "ResultMsg" : "정상처리"}
+            ```
+            
+            (실패)
+            ```json
+            {"Result":"false", "ResultCode": "89", "ResultMsg" : "광고없음", "Campaigns": []}
+            ```        
+    
+    
+                        
 ### II. nReward(비보상형) 연동
 
 ### III. CPC (클릭형) 연동
