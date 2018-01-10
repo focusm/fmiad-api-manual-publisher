@@ -145,7 +145,7 @@ I. Reward(보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeShow.php              
+            URL : http://ad.focusm.kr/service/freeShow.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -190,7 +190,7 @@ I. Reward(보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeGoto.php              
+            URL : http://ad.focusm.kr/service/freeGoto.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -219,7 +219,7 @@ I. Reward(보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeLanding.php              
+            URL : http://ad.focusm.kr/service/freeLanding.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -276,7 +276,7 @@ I. Reward(보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeInstall.php              
+            URL : http://ad.focusm.kr/service/freeInstall.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -446,7 +446,7 @@ II. nReward(비보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeShow.php              
+            URL : http://ad.focusm.kr/service/freeShow.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -491,7 +491,7 @@ II. nReward(비보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeGoto.php              
+            URL : http://ad.focusm.kr/service/freeGoto.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -520,7 +520,7 @@ II. nReward(비보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeLanding.php              
+            URL : http://ad.focusm.kr/service/freeLanding.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -586,7 +586,7 @@ II. nReward(비보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeInstall.php              
+            URL : http://ad.focusm.kr/service/freeInstall.php <br/>
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -635,29 +635,72 @@ II. nReward(비보상형) 연동
             }
             ``` 
 
-### III. CPC (클릭형) 연동
+III. CPC (클릭형) 연동
+----
 
+1. **광고 요청 (클릭형)**
 
-### IV. 연동 공통
-1. 광고 참여 완료 POSTBACK (OPTION)
-
-    광고 참여 완료 신호를 포커스엠에서 매체로 전달해 주기 위한 연동입니다.
+    클릭형(CPC) 광고에 대한 요청을 보내고 JSON 형태의 광고 정보를 회신 받는다.<br/>
+    정상으로 요청된 광고는 HTML로 제공한다.<br/> 
     
-    매체사는 전달 받을 POSTBACK URL 을 포커스엠 비지니스팀에 전달하여 등록해야 합니다. Reward 광고의 경우 필수 연동.
+    1. **request**
+    
+        1. **연동방식**
+            
+            URL : http://ad.focusm.kr/api2/ncpc_imp
+            Method : GET, POST 방식으로 연동
+            
+        2. **Parameter**
+        
+            | Parameter Name | Essential | Desc.                                                               |
+            | :------------: | :-------: | :------------------------------------------------------------------ |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
+            | os             | O         | **OS 종류** <br/> - ex) android, ios           |
+            | adid           | O         | **유일키** <br/> - s_type : 1 (application) 인 경우 <br/>  android google ads id, ios IDFA  |
+            | adtype         | O         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능)  |
+            | s_type         | O         | **서비스 타입** <br/> - 1 : application <br/> - 2 : mobile web site |
+            | agent          | -         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드 <br/> * puid2 파라미터를 보내지 못하는 경우 사용 |
+            | osv            | -         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드 <br/> * puid2 파라미터를 보내지 못하는 경우 사용 |
+            | model          | -         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드 <br/> * puid2 파라미터를 보내지 못하는 경우 사용 |
+            | pkg            | O         | 패키지 명 또는 사이트 도메인 <br/> - 광고 요청시 광고의 매체 구분 코드 <br/> * puid2 파라미터를 보내지 못하는 경우 사용 |
+        
+    2. **response**
+    
+        1. **Result infos**
+        
+        
+        2. **Result example**
+        
+            (성공)
+            ```json
+            ```
+            
+            (실패)
+            ```json
+            ```
+            
+IV. 연동 공통
+----
+
+1. **광고 참여 완료 POSTBACK (OPTION)**
+
+    광고 참여 완료 신호를 포커스엠에서 매체로 전달해 주기 위한 연동입니다.<br/>
+    매체사는 전달 받을 POSTBACK URL 을 포커스엠 비지니스팀에 전달하여 등록해야 합니다.<br/> 
+    Reward 광고의 경우 필수 연동.<br/>
     
     **postback URL 과 연동 method 를 등록 후 연동 가능**
     
     1. **request**
     
-        1. 연동방식
-            ```
-            - URL : 매체사에서 구현한 URL 정보
-            - Method : GET, POST
-            ```
-        2. Parameter (POST)
+        1. **연동방식**
+            
+            URL : 매체사에서 구현한 URL 정보
+            Method : GET, POST 방식으로 연동
+            
+        2. **Parameter (POST)**
         
             | Parameter Name  | Essential | Desc. |
-            | :---: | :---: | :----------------------- |
+            | :------: | :---: | :----------------------- |
             | puid     | -    | **Transaction ID** <br/> - FocusM 에서 처리된 Transaction ID |
             | uid      | -    | 매체에서 전달한 식별할 수 있는 유일키 정보<br/>ex) 사용자 고유 키, transaction key 등.  |
             | adtitle  | -    | 광고 제목 |
@@ -665,7 +708,7 @@ II. nReward(비보상형) 연동
             | userip   | -    | 광고 참여시 IP 정보 |
             | adcode   | -    | **광고 코드**<br/> - 포커스엠에서 생성한 연동 광고 코드  |
         
-        3. Parameter (GET)
+        3. **Parameter (GET)**
             ```
             Macro 값들이 치환되어 지정된 Parameter Name 으로 정보가 전달됩니다. 
             GET 방식을 원하시는 경우 매크로가 포함된 Full URL로 전달 바랍니다.
@@ -673,23 +716,22 @@ II. nReward(비보상형) 연동
             ```      
                 
 ### V. 기타
-1. 공통 결과 코드
+
+1. **공통 결과 코드**
     
-    ```
-    1 : 참여가능
-    10 : 광고 참여 완료 or 광고 참여 가능
-    20 : 리포팅 완료
-    29 : 리포팅데이터 없음
-    13 : 필수항목이 비었습니다.
-    89 : 광고 없음
-    99 : 오류발생 or 참여불가
-    100 : 참여중 오류 발생 or 광고 참여 불가
-    1000 : 유효하지 않은 광고
-    1100 : 유효하지 않은 매체
-    2000 : 이미광고에 참여
-    2300 : 일일 할당량을 넘었습니다.
-    2400 : 광고 정보를 불러 오는 데 실패하였습니다.
-    9999 : 올바른 처리가 아님
-    ```
-
-
+    | 코드 | 메시지 |
+    | :---: | :----------------------- |
+    | 1     | 참여가능 |
+    | 10    | 광고 참여 완료 or 광고 참여 가능 |
+    | 20    | 리포팅 완료 |
+    | 29    | 리포팅데이터 없음 |
+    | 13    | 필수항목이 비었습니다. |
+    | 89    | 광고 없음 |    
+    | 99    | 오류발생 or 참여불가 |    
+    | 100   | 참여중 오류 발생 or 광고 참여 불가 |    
+    | 1000  | 유효하지 않은 광고 |    
+    | 1100  | 유효하지 않은 매체 |    
+    | 2000  | 이미광고에 참여 |    
+    | 2300  | 일일 할당량을 넘었습니다. |    
+    | 2400  | 광고 정보를 불러 오는 데 실패하였습니다. |    
+    | 9999  | 올바른 처리가 아님 |
