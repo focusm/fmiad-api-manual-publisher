@@ -647,7 +647,7 @@ III. CPC (클릭형) 연동
     
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/api2/ncpc_imp
+            URL : http://ad.focusm.kr/api2/ncpc_imp <br/>
             Method : GET, POST 방식으로 연동
             
         2. **Parameter**
@@ -712,7 +712,7 @@ IV. 연동 공통
     
         1. **연동방식**
             
-            URL : 매체사에서 구현한 URL 정보
+            URL : 매체사에서 구현한 URL 정보 <br/>
             Method : GET, POST 방식으로 연동
             
         2. **Parameter (POST)**
