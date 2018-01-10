@@ -667,16 +667,34 @@ III. CPC (클릭형) 연동
     2. **response**
     
         1. **Result infos**
-        
+
+            | Parameter Name  | Essential | Desc.                     |
+            | :-------------: | :-------: | :-----------------------  |
+            | code            | O         | **결과 코드** <br/> - 10 : 광고 있음, 99 : 광고 없음 |
+            | adcode          | O         | **광고 코드**               |        
+            | html            | O         | **광고** <br/> - webview 또는 browser 에서 바로 사용 |        
+            | time            | O         | **회신시간**               |        
         
         2. **Result example**
         
             (성공)
             ```json
+            {
+            "adcode": "SAD0000000",
+            "code": 10,
+            "html": "<div><a href=\"http://ad.focusm.kr/service/freeGoto.php?ad_type=1&aid=SAD1606001&mid=AD16060041496\"><img src=\"http://img.shoppingcast.kr/data/files/ai20160629132312_16.jpg\" style=\"width: 100%; height: 100%;\"></a></div>",
+            "time": 1467264462
+            }
             ```
             
             (실패)
             ```json
+            {
+               "code": 99,
+               "adcode": "",
+               "html": "",
+               "time": 1467264462
+             }
             ```
             
 IV. 연동 공통
