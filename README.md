@@ -2,7 +2,7 @@ FMI-AD API 연동가이드
 ---
 
 ### 목차
-##### I. Reward(보상형) 연동
+##### [I. Reward(보상형) 연동](#i-reward(보상형)-연동)
 ##### II. nReward(비보상형) 연동
 ##### III. CPC (클릭형) 연동
 ##### IV. 연동 공통
