@@ -54,7 +54,7 @@ I. Reward(보상형) 연동
             | Result          | O         | 결과 여부 <br/> - true : 정상, false : 오류 |
             | ResultCode      | O         | 결과 코드                                   |
             | ResultMsg       | O         | 결과 메시지                                 |
-            | Campaigns       | -                                                      ||
+            | Campaigns []    | -                                                      ||
             | AdId            | -         | 광고코드            |
             | AdTitle         | -         | 광고명칭            |
             | AdType          | -         | 광고 타입<br/> - install : 설치형<br/> - click : 클릭형<br/> - imapressions : 노출형<br/> - run : 실행형<br/> - action : 액션형 |
@@ -211,7 +211,7 @@ I. Reward(보상형) 연동
 4. **광고 참여 (JSON TYPE)**
 
     ```
-    광고 참여 요청으로 광고 설치 마켓이나 트래커 또는 광고 상태에 따른 페이지로 redirect 처리
+    광고 참여 요청으로 광고 상태와 광고 참여 URL 정보를 리턴
     광고 요청 연동 시에는 response 를 통해 제공되는 URL 사용 가능
     ```
 
@@ -219,7 +219,7 @@ I. Reward(보상형) 연동
         
         1. **연동방식**
             
-            URL : http://ad.focusm.kr/service/freeGoto.php              
+            URL : http://ad.focusm.kr/service/freeLanding.php              
             Method : GET 방식으로 요청
             
         2. **Parameters**
@@ -228,7 +228,7 @@ I. Reward(보상형) 연동
             | :------------: | :-------: | :------------------------------------------------------------------ |
             | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
             | aid            | O         | **광고 코드** <br/> - 포커스엠에서 생성한 연동 광고 코드           |
-            | uid            | O         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등 <br/> * Reward 광고 연동 시 필수 |
+            | uid            | O         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등 <br/> * 광고참여완료 POSTBACK 연동시 필수 |
             | puid2          | O         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능) <br/> * Reward 광고 연동 시 필수 |
             | adid           | O         | 구글 광고 ID <br/> * Reward 광고 연동 시 필수 |
             | ad_type        | O         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드            |
@@ -304,8 +304,8 @@ I. Reward(보상형) 연동
             (성공)
             ```json
             {
-            "ResultCode": "10",
-              "ResultMsg": "참여완료",
+                "ResultCode": "10",
+                "ResultMsg": "참여완료"
             }
 
             ```
@@ -313,8 +313,8 @@ I. Reward(보상형) 연동
             (실패)
             ```json
             {
-            "ResultCode": "2000",
-            "ResultMsg": "이미광고에 참여"
+                "ResultCode": "2000",
+                "ResultMsg": "이미광고에 참여"
             }
             ```
             
@@ -324,9 +324,316 @@ I. Reward(보상형) 연동
             "ResultMsg": "참여불가"
             }
             ```   
-                                    
-### II. nReward(비보상형) 연동
 
+II. nReward(비보상형) 연동
+----
+
+1. **광고 요청 (설치형-CPI / 실행형-CPE / 액션형-CPA / … )**
+
+    ```
+    광고 요청을 통해 광고 목록 또는 단일 광고를 요청하는 방식으로 제공되는 API 입니다.
+    단일 광고 연동의 경우 사전 협의하여 URL 직접 전달하여 처리하는 방식으로도 제공됩니다.
+    단일 광고 연동의 경우 포커스엠 비즈니스팀과 협의하여 진행하시길 바랍니다.
+    URL 전달형 연동의 경우 광고 요청 API 연동은 생략 가능합니다.
+    ```
+   
+    1. **Request**
+    
+        1. **연동방식**
+            
+            > Redirect 연동형 : 매체에서 판단없이 FMI을 통해 광고 참여 처리 시 사용<br/>
+            JSON 연동형 : 매체에서 광고 상태를 확인하여 매체에서 광고 참여 등을 직접 처리
+            
+            **광고 요청 시 리턴되는 JSON DATA에 각 연동 타입에 맞는 정보가 제공됩니다.**
+            
+            URL : <br/>
+                http://ad.focusm.kr/service/freeList.php (Redirect 연동형) - 3. 광고 참여 (REDIRECT TYPE) 참고<br/>              
+                http://ad.focusm.kr/service/freeListL.php (JSON 연동형) - 4. 광고 참여 (JSON TYPE) 참고
+            
+            Method : GET 방식으로 요청
+            
+        2. **Parameters**
+            
+            | Parameter Name | Essential | Desc.  |
+            | :------------: | :-------: | :----------------------- |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드 |
+            | adimg          | -         | 추가 이미지 타입<br/> - ddhl (정사각형)<br/> - floating3 (띠배너)<br/> - fullimg (풀이미지)<br/> - ptscs (직사각형)<br/> ex) adimg=ddhl,floating3<br/><br/> * icon 이외 배너 이미지 등을 요청 시에만 사용됩니다.  |
+        
+    2. **Response**
+    
+        1. **Result infos**
+        
+            | Parameter Name  | Essential | Desc.  |
+            | :-------------: | :-------: | :----------------------- |
+            | Result          | O         | 결과 여부 <br/> - true : 정상, false : 오류 |
+            | ResultCode      | O         | 결과 코드                                   |
+            | ResultMsg       | O         | 결과 메시지                                 |
+            | Campaigns  []   | -                                                      ||
+            | AdId            | -         | 광고코드            |
+            | AdTitle         | -         | 광고명칭            |
+            | AdType          | -         | 광고 타입<br/> - install : 설치형<br/> - click : 클릭형<br/> - imapressions : 노출형<br/> - run : 실행형<br/> - action : 액션형 |
+            | AppPackage      | -         | 패키지명            |
+            | AppName         | -         | 앱 이름            |
+            | AppDownloadURL  | -         | 광고 참여시 호출 URL            |
+            | AppShowURL      | -         | 광고 노출시 호출 URL            |
+            | AppIcon         | -         | 앱아이콘 URL            |
+            | ViewTitle       | -         | 광고 타이틀            |
+            | ViewDesc        | -         | 광고 설명            |
+            | AdADType        | -         | 매체 구분 코드            |
+            | DeviceVer       | -         | 단말 버전            |
+            | addImage        | -         | 추가 이미지 URL            |
+            | addWidth        | -         | 광고 소재 가로 사이즈            |
+            | addHeight       | -         | 광고 소재 세로 사이즈            |
+            | DayCut          | -         | 일 노출 제한 값            |
+            | DayClickCut     | -         | 일 클릭 제한 값            |
+            | DayGoalCut      | -         | 일 실행 제한 값            |
+            | Price           | -         | 매체 단가            |
+            | UserPoint       | -         | 매체 사용자 단가            |
+            | Country         | -         |  국가 코드           |
+        
+        2. **Result example**
+            
+            (성공)
+            ```json
+            {
+                "Result": "true" ,
+                "ResultCode": 1 ,
+                "ResultMsg": "참여가능",
+                "Campaigns": [
+                {
+                    "AdId": "SAD1406012",
+                    "AdTitle": "TOP10 보상형 실행광고",
+                    "AdType": "run",
+                    "AppDownloadUrl": "http://ad.focusm.kr/service/freeGoto.php?mid=AD140100374&ad_type=1&aid=SAD1406012&uid=",
+                    "AppIcon": "http://ad.focusm.kr/data/ad/SP1406004_20164052a0.png",
+                    "AppPackage": "kr.co.ytop10",
+                    "AppShowUrl": "http://ad.focusm.kr/service/freeShow.php?mid=AD140100374&ad_type=1&aid=SAD1406012&uid=",
+                    "ViewDesc": "TOP10 설명",
+                    "ViewTitle": "TOP10",
+                    "addImage": "http://ad.focusm.kr/data/ad/SP1406004_20164052a11.png"
+                },
+                {
+                    "AppShowUrl": "http://ad.focusm.kr/service/freeShow.php?mid=AD140100374&ad_type=2&aid=SAD1406013&uid=",
+                    "AdId": "SAD1406013",
+                    "AdTitle": "어디갈까 보상형 설치광고",
+                    "AdType": "install",
+                    "AppDownloadUrl": "http://ad.focusm.kr/service/freeGoto.php?mid=AD140100374&ad_type=2&aid=SAD1406013&uid=",
+                    "AppIcon": "http://ad.focusm.kr/data/ad/SP1406004_20164052a1.png",
+                    "AppPackage": "kr.co.thisweek",
+                    "ViewDesc": "어디갈까설명",
+                    "ViewTitle": "어디갈까",
+                    "AdADType": "2",
+                    "addImage": "http://ad.focusm.kr/data/ad/SP1406004_20164052a11.png"
+                }
+            ] 
+            }
+            ```
+            
+            (실패)
+            ```json
+            {"Result":"false", "ResultCode": "89", "ResultMsg" : "광고없음", "Campaigns": []}
+            ```        
+
+2. **노출 신호 (OPTIONAL)**
+
+    ```
+    광고 요청 API 사용하지 않고 단일 광고에 대해 FMI으로부터 직접 전달받아 사용하는 경우 사용됩니다.
+    FMI에서 노출 빈도를 집계하기 위한 API 입니다.
+    매체 사정에 의해 생략 가능합니다.
+    ```
+
+    1. **Request**
+        
+        1. **연동방식**
+            
+            URL : http://ad.focusm.kr/service/freeShow.php              
+            Method : GET 방식으로 요청
+            
+        2. **Parameters**
+            
+            | Parameter Name | Essential | Desc.                                                               |
+            | :------------: | :-------: | :------------------------------------------------------------------ |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
+            | aid            | O         | **광고 코드** <br/> - 포커스엠에서 생성한 연동 광고 코드           |
+            | uid            | -         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등     |
+            | puid2          | -         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능) |
+            | adid           | -         | 구글 광고 ID                                                        |
+        
+    2. **Response**
+    
+        1. **Result infos**
+        
+            | Parameter Name  | Essential | Desc.                    |
+            | :-------------: | :-------: | :----------------------- |
+            | ResultCode      | O         | 결과 코드                |
+            | ResultMsg       | O         | 결과 메시지              |
+        
+        2. **Result example**
+            
+            (성공)
+            ```json
+            {"ResultCode": "10", "ResultMsg" : "정상처리"}
+            ```
+            
+            (실패)
+            ```json
+            {"ResultCode": "100", "ResultMsg" : "참여 중 오류 발생"}
+            ```        
+
+3. **광고 참여 (REDIRECT TYPE)**
+
+    ```
+    광고 참여 요청으로 광고 설치 마켓이나 트래커 또는 광고 상태에 따른 페이지로 redirect 처리
+    광고 요청 연동 시에는 response 를 통해 제공되는 URL 사용 가능
+    ```
+
+    1. **Request**
+        
+        1. **연동방식**
+            
+            URL : http://ad.focusm.kr/service/freeGoto.php              
+            Method : GET 방식으로 요청
+            
+        2. **Parameters**
+            
+            | Parameter Name | Essential | Desc.                                                               |
+            | :------------: | :-------: | :------------------------------------------------------------------ |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
+            | aid            | O         | **광고 코드** <br/> - 포커스엠에서 생성한 연동 광고 코드           |
+            | uid            | O         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등 <br/> * 광고참여완료 POSTBACK 연동 시 필수 항목 |
+            | puid2          | -         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능) |
+            | adid           | -         | 구글 광고 ID  |
+            | ad_type        | O         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드            |
+        
+    2. **Response**
+
+        result 정보 없이 요청 페이지로 redirect
+
+4. **광고 참여 (JSON TYPE)**
+
+    ```
+    광고 참여 요청으로 광고 상태와 광고 참여 URL 정보를 리턴
+    광고 요청 연동 시에는 response 를 통해 제공되는 URL 사용 가능
+    ```
+
+    1. **Request**
+        
+        1. **연동방식**
+            
+            URL : http://ad.focusm.kr/service/freeLanding.php              
+            Method : GET 방식으로 요청
+            
+        2. **Parameters**
+            
+            | Parameter Name | Essential | Desc.                                                               |
+            | :------------: | :-------: | :------------------------------------------------------------------ |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
+            | aid            | O         | **광고 코드** <br/> - 포커스엠에서 생성한 연동 광고 코드           |
+            | uid            | O         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등 <br/> * 광고참여완료 POSTBACK 연동시 필수 |
+            | puid2          | O         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능) |
+            | adid           | O         | 구글 광고 ID <br/> * Reward 광고 연동 시 필수 |
+            | ad_type        | O         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드            |
+        
+    2. **Response**
+
+        1. **Result infos**
+        
+            | Parameter Name  | Essential | Desc.                     |
+            | :-------------: | :-------: | :-----------------------  |
+            | Result          | O         | 결과 여부 (true or false) |
+            | ResultCode      | O         | 결과 코드                 |
+            | ResultMsg       | O         | 결과 메시지               |
+            | LandingURL      | O         | 광고 참여 URL             |
+
+        2. **Result example**
+            
+            (성공)
+            ```json
+            {
+              "Result" : true,
+              "ResultCode" : "10",
+              "ResultMsg" : "참여가능",
+              "LandingURL" : "[광고 참여 URL]"
+            }
+            ```
+            
+            (실패)
+            ```json
+            {
+              "Result": false,
+              "ResultCode": "99",
+              "ResultMsg": "참여불가",
+              "LandingURL": ""
+            }
+            ```
+                
+            ```json
+            {
+              "Result": false,
+              "ResultCode": "9999",
+              "ResultMsg": "올바른 처리가 아님",
+              "LandingURL": ""
+            }
+            ```           
+
+5. **광고 참여 완료 (설치형-CPI)**
+
+    ```
+    설치형 광고에만 해당하는 경우이며, 설치 완료 후 설치 완료에 대한 신호를 전송 해야합니다.
+    ```
+
+    1. **Request**
+        
+        1. **연동방식**
+            
+            URL : http://ad.focusm.kr/service/freeInstall.php              
+            Method : GET 방식으로 요청
+            
+        2. **Parameters**
+            
+            | Parameter Name | Essential | Desc.                                                               |
+            | :------------: | :-------: | :------------------------------------------------------------------ |
+            | mid            | O         | **매체 코드** <br/> - 포커스엠에서 발급한 매체 코드                |
+            | aid            | O         | **광고 코드** <br/> - 포커스엠에서 생성한 연동 광고 코드           |
+            | uid            | O         | 매체에서 식별할 수 있는 유일키 정보 <br/> ex) 사용자 고유 키 등 <br/> * 광고참여완료 POSTBACK 연동시 필수 |
+            | puid2          | O         | 기기 고유 값 <br/> - IMEI 정보 (없을 경우 mac address 로 대체 가능)  |
+            | adid           | O         | 구글 광고 ID |
+            | puid           | O         | 광고 구분 코드 <br/> - 광고 요청시 광고의 매체 구분 코드 <br/> * puid2 파라미터를 보내지 못하는 경우 사용 |
+        
+    2. **Response**
+
+        1. **Result infos**
+        
+            | Parameter Name  | Essential | Desc.                     |
+            | :-------------: | :-------: | :-----------------------  |
+            | ResultCode      | O         | 결과 코드                 |
+            | ResultMsg       | O         | 결과 메시지               |
+
+        2. **Result example**
+            
+            (성공)
+            ```json
+            {
+                "ResultCode": "10",
+                "ResultMsg": "참여완료"
+            }
+
+            ```
+            
+            (실패)
+            ```json
+            {
+                "ResultCode": "9999",
+                "ResultMsg": "올바른 처리가 아님"
+            }
+            ```
+            
+            ```json
+            {
+            "ResultCode": "99",
+            "ResultMsg": "참여불가"
+            }
+            ``` 
 
 ### III. CPC (클릭형) 연동
 
